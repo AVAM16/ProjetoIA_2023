@@ -34,6 +34,10 @@ class BimaruState:
 
 class Board:
     """Representação interna de um tabuleiro de Bimaru."""
+    def __init__(self, rown, coln):
+        self.rownumber = rown
+        self.colnumber = coln
+        self.table = [['-' for _ in range(10)] for _ in range(10)]
 
     def get_value(self, row: int, col: int) -> str:
         """Devolve o valor na respetiva posição do tabuleiro."""
