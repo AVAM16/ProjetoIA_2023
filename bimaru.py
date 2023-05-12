@@ -16,6 +16,7 @@ from search import (
     greedy_search,
     recursive_best_first_search,
 )
+from typing import Tuple
 
 
 class BimaruState:
@@ -35,26 +36,25 @@ class BimaruState:
 class Board:
     """Representação interna de um tabuleiro de Bimaru."""
     def __init__(self, rown, coln):
-        self.rownumber = rown
-        self.colnumber = coln
+        self.rownumbers = rown
+        self.colnumbers = coln
         self.table = [['-' for _ in range(10)] for _ in range(10)]
 
     def get_value(self, row: int, col: int) -> str:
         """Devolve o valor na respetiva posição do tabuleiro."""
-        # TODO
-        pass
+        return self.table[row][col]
 
-    def adjacent_vertical_values(self, row: int, col: int) -> (str, str):
+    def adjacent_vertical_values(self, row: int, col: int) -> Tuple[str, str]:
         """Devolve os valores imediatamente acima e abaixo,
         respectivamente."""
-        # TODO
-        pass
+        output = (self.table[row][col-1], self.table[row][col+1])
+        return output
 
-    def adjacent_horizontal_values(self, row: int, col: int) -> (str, str):
+    def adjacent_horizontal_values(self, row: int, col: int) -> Tuple[str, str]:
         """Devolve os valores imediatamente à esquerda e à direita,
         respectivamente."""
-        # TODO
-        pass
+        output = (self.table[row-1][col], self.table[row+1][col])
+        return output
 
     @staticmethod
     def parse_instance():
@@ -71,6 +71,11 @@ class Board:
         pass
 
     # TODO: outros metodos da classe
+    def get_hint(self, hint:tuple):
+        row = hint[0];
+        column = hint[1];
+        shape = hint[2];
+        self.table[row][column] = shape
 
 
 class Bimaru(Problem):
