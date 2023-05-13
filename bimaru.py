@@ -16,8 +16,7 @@ from search import (
     greedy_search,
     recursive_best_first_search,
 )
-from typing import Tuple
-
+import numpy as np
 
 class BimaruState:
     state_id = 0
@@ -35,22 +34,23 @@ class BimaruState:
 
 class Board:
     """Representação interna de um tabuleiro de Bimaru."""
-    def __init__(self, rown, coln):
+    def __init__(self, rown:tuple, coln:tuple):
         self.rownumbers = rown
         self.colnumbers = coln
-        self.table = [['-' for _ in range(10)] for _ in range(10)]
+        self.table = np.chararray((10,10),unicode=True)
+        self.table[:] = '-'
 
     def get_value(self, row: int, col: int) -> str:
         """Devolve o valor na respetiva posição do tabuleiro."""
         return self.table[row][col]
 
-    def adjacent_vertical_values(self, row: int, col: int) -> Tuple[str, str]:
+    def adjacent_vertical_values(self, row: int, col: int) -> (str, str):
         """Devolve os valores imediatamente acima e abaixo,
         respectivamente."""
         output = (self.table[row][col-1], self.table[row][col+1])
         return output
 
-    def adjacent_horizontal_values(self, row: int, col: int) -> Tuple[str, str]:
+    def adjacent_horizontal_values(self, row: int, col: int) -> (str, str):
         """Devolve os valores imediatamente à esquerda e à direita,
         respectivamente."""
         output = (self.table[row-1][col], self.table[row+1][col])
@@ -71,11 +71,14 @@ class Board:
         pass
 
     # TODO: outros metodos da classe
+    """"W (water), C (circle), T (top), M (middle), B (bottom), L (left) e R (right)"""
     def get_hint(self, hint:tuple):
         row = hint[0];
         column = hint[1];
         shape = hint[2];
         self.table[row][column] = shape
+          
+
 
 
 class Bimaru(Problem):
