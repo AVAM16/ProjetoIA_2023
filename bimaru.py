@@ -37,8 +37,9 @@ class Board:
     def __init__(self, rown:tuple, coln:tuple):
         self.rownumbers = rown
         self.colnumbers = coln
-        self.table = np.chararray((10,10),unicode=True)
-        self.table[:] = '-'
+        self.table = np.full((10,10), "-")
+        self.fleet = np.array([1,2,3,4])
+        """1 de 4, 2 de 3, 3 de 2, 4 de 1"""
 
     def get_value(self, row: int, col: int) -> str:
         """Devolve o valor na respetiva posição do tabuleiro."""
@@ -68,7 +69,20 @@ class Board:
             > line = stdin.readline().split()
         """
         # TODO
-        pass
+        from sys import stdin
+        row = stdin.readline().split().pop(0)
+        row = [int(x) for x in row]
+        column = stdin.readline().split().pop(0)
+        column = [int(x) for x in column]
+        b = Board(tuple(row), tuple(column))
+        n = int(stdin.readline().strip())
+        x = 0
+        while x < n:
+            hint = stdin.readline().split().pop(0)
+            hint = [int(x) for x in row]
+            b.get_hint(tuple(hint))
+            x += 1;
+        return b
 
     # TODO: outros metodos da classe
     """"W (water), C (circle), T (top), M (middle), B (bottom), L (left) e R (right)"""
