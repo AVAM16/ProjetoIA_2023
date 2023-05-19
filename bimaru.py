@@ -38,6 +38,12 @@ class Board:
         self.rownumbers = rown
         self.colnumbers = coln
         self.table = np.full((10,10), "-")
+        for i in range(10):
+            if rown[i] == 0:
+                self.table[i] = np.full((1,10), "W") 
+        for i in range(10):
+            if coln[i] == 0:
+                self.table[:, i] = np.full((1,10), "W") 
         self.fleet = np.array([1,2,3,4])
         """1 de 4, 2 de 3, 3 de 2, 4 de 1"""
 
@@ -79,7 +85,7 @@ class Board:
         x = 0
         while x < n:
             hint = stdin.readline().split().pop(0)
-            hint = [int(x) for x in row]
+            hint = [int(x) for x in hint]
             b.get_hint(tuple(hint))
             x += 1;
         return b
@@ -91,6 +97,8 @@ class Board:
         column = hint[1];
         shape = hint[2];
         self.table[row][column] = shape
+        if shape == "C":
+            self.fleet[3] -= 1;
           
 
 
