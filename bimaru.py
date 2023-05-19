@@ -2,9 +2,9 @@
 # Devem alterar as classes e funções neste ficheiro de acordo com as instruções do enunciado.
 # Além das funções e classes já definidas, podem acrescentar outras que considerem pertinentes.
 
-# Grupo 00:
-# 00000 Nome1
-# 00000 Nome2
+# Grupo 29:
+# 102503 Artur Martins
+# 102938 Francisco Caetano Fortunato
 
 import sys
 from search import (
@@ -35,8 +35,8 @@ class BimaruState:
 class Board:
     """Representação interna de um tabuleiro de Bimaru."""
     def __init__(self, rown:tuple, coln:tuple):
-        self.rownumbers = rown
-        self.colnumbers = coln
+        self.rowtip = np.asarray(rown)
+        self.coltip = np.asarray(coln)
         self.table = np.full((10,10), "-")
         for i in range(10):
             if rown[i] == 0:
@@ -51,13 +51,13 @@ class Board:
         """Devolve o valor na respetiva posição do tabuleiro."""
         return self.table[row][col]
 
-    def adjacent_vertical_values(self, row: int, col: int) -> (str, str):
+    def adjacent_vertical_values(self, row: int, col: int):
         """Devolve os valores imediatamente acima e abaixo,
         respectivamente."""
         output = (self.table[row][col-1], self.table[row][col+1])
         return output
 
-    def adjacent_horizontal_values(self, row: int, col: int) -> (str, str):
+    def adjacent_horizontal_values(self, row: int, col: int):
         """Devolve os valores imediatamente à esquerda e à direita,
         respectivamente."""
         output = (self.table[row-1][col], self.table[row+1][col])
@@ -97,6 +97,9 @@ class Board:
         column = hint[1];
         shape = hint[2];
         self.table[row][column] = shape
+        if shape != "W":
+            self.rowtip[row] -= 1;
+            self.coltip[column] -= 1;
         if shape == "C":
             self.fleet[3] -= 1;
           
