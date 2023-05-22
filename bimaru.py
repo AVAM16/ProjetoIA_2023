@@ -87,21 +87,21 @@ class Board:
             hint = stdin.readline().split().pop(0)
             hint = [int(x) for x in hint]
             b.get_hint(tuple(hint))
-            x += 1;
+            x += 1
         return b
 
     # TODO: outros metodos da classe
     """"W (water), C (circle), T (top), M (middle), B (bottom), L (left) e R (right)"""
     def get_hint(self, hint:tuple):
-        row = hint[0];
-        column = hint[1];
-        shape = hint[2];
+        row = hint[0]
+        column = hint[1]
+        shape = hint[2]
         self.table[row][column] = shape
         if shape != "W":
-            self.rowtip[row] -= 1;
-            self.coltip[column] -= 1;
+            self.rowtip[row] -= 1
+            self.coltip[column] -= 1
         if shape == "C":
-            self.fleet[3] -= 1;
+            self.fleet[3] -= 1
           
 
 
