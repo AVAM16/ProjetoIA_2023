@@ -40,10 +40,10 @@ class Board:
         self.table = np.full((10,10), "-")
         for i in range(10):
             if rown[i] == 0:
-                self.table[i] = np.full((1,10), "W") 
+                self.table[i] = np.full((1,10), ".") 
         for i in range(10):
             if coln[i] == 0:
-                self.table[:, i] = np.full((1,10), "W") 
+                self.table[:, i] = np.full((1,10), ".") 
         self.fleet = np.array([1,2,3,4])
         """1 de 4, 2 de 3, 3 de 2, 4 de 1"""
 
@@ -92,6 +92,71 @@ class Board:
 
     # TODO: outros metodos da classe
     """"W (water), C (circle), T (top), M (middle), B (bottom), L (left) e R (right)"""
+    def check_rows(self):
+        changed = 0
+        row = 0
+        while row<10:
+            counter = 0
+            column = 0
+            while column<10:
+                if self.table[row][column] == "-":
+                    counter +=1
+                column+=1
+            if counter == self.rowtip[row]:
+                fill_row(self,row)
+                changed = 1
+            if counter < self.rowtip[row]:
+                return -1
+            row+=1
+        return changed
+
+    def check_columns(self):
+        column = 0
+        changed = 0
+        while column<10:
+            counter = 0
+            row = 0
+            while row<10:
+                if self.table[row][column] == "-":
+                    counter +=1
+                row+=1
+            if counter == self.coltip[column]:
+                fill_column(self,column)
+                changed = 1
+            if counter < self.coltip[column]:
+                return -1
+            column+=1
+        return changed
+    
+    def check_finish(self):
+        column = 0
+        counter = 0
+        while column<10:
+            row = 0
+            while row<10:
+                if self.table[row][column] == "-":
+                    counter +=1
+                row+=1   
+            column+=1
+        if counter == 0:
+            return 1
+        return 0
+    
+
+    def fill_corners_and_adj(self,row , column,shape):
+        self.table[row+1][column+1] = "."
+        self.table[row+1][column-1] = "."
+        self.table[row-1][column+1] = "."
+        self.table[row-1][column-1] = "."
+        if shape != "B" or shape != "M":
+            self.table[row+1][column] = "."
+        if shape != "L" or shape != "M":
+            self.table[row][column+1] = "."
+        if shape != "R" or shape != "M":
+            self.table[row][column-1] = "."
+        if shape != "T" or shape != "M":
+            self.table[row-1][column] = "."
+
     def get_hint(self, hint:tuple):
         row = hint[0]
         column = hint[1]
@@ -100,9 +165,10 @@ class Board:
         if shape != "W":
             self.rowtip[row] -= 1
             self.coltip[column] -= 1
+            
         if shape == "C":
             self.fleet[3] -= 1
-          
+        
 
 
 
@@ -115,6 +181,7 @@ class Bimaru(Problem):
     def actions(self, state: BimaruState):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
+        self.table.[row]
         # TODO
         pass
 
