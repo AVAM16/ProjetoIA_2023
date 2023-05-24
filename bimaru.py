@@ -144,17 +144,23 @@ class Board:
     
 
     def fill_corners_and_adj(self,row , column,shape):
-        self.table[row+1][column+1] = "."
-        self.table[row+1][column-1] = "."
-        self.table[row-1][column+1] = "."
-        self.table[row-1][column-1] = "."
-        if shape != "B" or shape != "M":
+        if row == 9:
+            if column == 9:
+                self.table[row+1][column+1] = "."
+            if column == 0:
+                self.table[row+1][column-1] = "."
+        if row == 0:
+            if column == 9:
+                self.table[row-1][column+1] = "."
+            if column == 0:
+                self.table[row-1][column-1] = "."
+        if shape != "B" or shape != "M" or row == 9:
             self.table[row+1][column] = "."
-        if shape != "L" or shape != "M":
+        if shape != "L" or shape != "M" or column == 9:
             self.table[row][column+1] = "."
-        if shape != "R" or shape != "M":
+        if shape != "R" or shape != "M" or column == 0:
             self.table[row][column-1] = "."
-        if shape != "T" or shape != "M":
+        if shape != "T" or shape != "M" or row == 0:
             self.table[row-1][column] = "."
 
     def get_hint(self, hint:tuple):
