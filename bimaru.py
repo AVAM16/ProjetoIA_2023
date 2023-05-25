@@ -125,7 +125,7 @@ class Board:
         column = 0
         counter = 0
         while column < 10:
-            if self.table[row][column] == "-" or self.table[row][column] == "S":
+            if self.table[row][column] != ".":
                 if (column == 0 or self.table[row][column-1] == ".") and (column != 9 and self.table[row][column+1] != "."):
                     self.table[row][column] = "L"
                     self.fill_corners_and_adj(row,column,"L")
@@ -263,6 +263,28 @@ class Board:
             self.rowtip[row] -= 1
             self.coltip[column] -= 1
             self.fill_corners_and_adj(row,column,shape)
+        else:
+            self.table[row][column] = "."
+        if shape == "L":
+            if column == 8 or self.table[row][column+2] == ".":
+                self.table[row][column+1] = "R"
+            else:
+                self.table[row][column+1] = "S"
+        if shape == "R":
+            if column == 1 or self.table[row][column-2] == ".":
+                self.table[row][column+1] = "L"
+            else:
+                self.table[row][column+1] = "S"
+        if shape == "T":
+            if row == 8 or self.table[row+2][column] == ".":
+                self.table[row+1][column] = "R"
+            else:
+                self.table[row+1][column] = "S"
+        if shape == "B":
+            if row == 1 or self.table[row-2][column] == ".":
+                self.table[row-1][column] = "R"
+            else:
+                self.table[row-1][column] = "S"
         if shape == "C":
             self.fleet[3] -= 1
         
@@ -306,6 +328,8 @@ class Bimaru(Problem):
 
 
 if __name__ == "__main__":
+    board = 
+    
     # TODO:
     # Ler o ficheiro do standard input,
     # Usar uma técnica de procura para resolver a instância,
