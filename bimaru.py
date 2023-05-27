@@ -330,6 +330,7 @@ class Bimaru(Problem):
 
 
 if __name__ == "__main__":
+    b = Board().parse_instance
     # TODO:
     # Ler o ficheiro do standard input,
     # Usar uma técnica de procura para resolver a instância,
