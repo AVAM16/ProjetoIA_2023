@@ -117,6 +117,12 @@ class Board:
             self.table[row][column-1] = "."
         if shape != "T" or shape != "M" or row != 0:
             self.table[row-1][column] = "."
+        if self.table[row-1][column] == "." or self.table[row+1][column] == ".":
+            self.table[row-1][column] = "."
+            self.table[row+1][column] = "."
+        if self.table[row][column-1] == "." or self.table[row][column+1] == ".":
+            self.table[row][column-1] = "."
+            self.table[row][column+1] = "."
 
 
     def fill_corners_and_adj(self,row , column,shape):
@@ -240,6 +246,59 @@ class Board:
                 return -1
             column+=1
         return changed
+    
+
+    def check_zeros(self):
+        column = 0
+        row = 0
+        changed = 0
+        while column<10:
+            if self.coltip[column] == 0:
+                while row<10:
+                    row = 0
+                    if self.table[row][column] == "-":
+                        self.table[row][column] = "."
+                    row+=1
+                self.fill_column(column)
+                changed = 1
+            if self.coltip[column] < 0:
+                return -1
+            column+=1
+        while row<10:
+            if self.rowtip[row] == 0:
+                while column<10:
+                    column = 0
+                    if self.table[row][column] == "-":
+                        self.table[row][column] = "."
+                    column+=1
+                self.fill_row(row)
+                changed = 1
+            if self.rowtip[row] < 0:
+                return -1
+            row+=1
+        return changed
+    
+    def fill_board(self):
+        repeat = 0
+        while repeat != 0:
+            repeat = 0
+            changed = self.check_rows()
+            if changed == -1:
+                return changed
+            if changed == 1:
+                repeat = 1
+            changed = self.check_columns()
+            if changed == -1:
+                return changed
+            if changed == 1:
+                repeat = 1
+            changed = self.check_zeros()
+            if changed == -1:
+                return changed
+            if changed == 1:
+                repeat = 1
+        return 0
+        
     
     def check_finish(self):
         column = 0
