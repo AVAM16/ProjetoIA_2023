@@ -34,16 +34,10 @@ class BimaruState:
 
 class Board:
     """Representação interna de um tabuleiro de Bimaru."""
-    def __init__(self, rown:tuple, coln:tuple):
-        self.rowtip = np.asarray(rown)
-        self.coltip = np.asarray(coln)
+    def __init__(self):
+        self.rowtip = np.empty(10)
+        self.coltip = np.empty(10)
         self.table = np.full((10,10), "-")
-        for i in range(10):
-            if rown[i] == 0:
-                self.table[i] = np.full((1,10), ".") 
-        for i in range(10):
-            if coln[i] == 0:
-                self.table[:, i] = np.full((1,10), ".") 
         self.fleet = np.array([1,2,3,4])
         """1 de 4, 2 de 3, 3 de 2, 4 de 1"""
 
@@ -80,7 +74,15 @@ class Board:
         row = [int(x) for x in row]
         column = stdin.readline().split().pop(0)
         column = [int(x) for x in column]
-        b = Board(tuple(row), tuple(column))
+        b = Board()
+        b.rowtip = row
+        b.coltip = column
+        for i in range(10):
+            if b.rowtip[i] == 0:
+                b.table[i] = np.full((1,10), ".") 
+        for i in range(10):
+            if b.coltip[i] == 0:
+                b.table[:, i] = np.full((1,10), ".") 
         n = int(stdin.readline().strip())
         x = 0
         while x < n:
@@ -306,6 +308,7 @@ class Bimaru(Problem):
 
 
 if __name__ == "__main__":
+    b = Board().parse_instance;
     # TODO:
     # Ler o ficheiro do standard input,
     # Usar uma técnica de procura para resolver a instância,
