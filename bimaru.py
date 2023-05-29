@@ -117,12 +117,16 @@ class Board:
             self.table[row][column-1] = "."
         if shape != "T" or shape != "M" or row != 0:
             self.table[row-1][column] = "."
-        if self.table[row-1][column] == "." or self.table[row+1][column] == ".":
-            self.table[row-1][column] = "."
-            self.table[row+1][column] = "."
-        if self.table[row][column-1] == "." or self.table[row][column+1] == ".":
-            self.table[row][column-1] = "."
-            self.table[row][column+1] = "."
+        if row == 0 or self.table[row-1][column] == "." or row == 9 or self.table[row+1][column] == ".":
+            if row != 0:
+                self.table[row-1][column] = "."
+            if row != 9:
+                self.table[row+1][column] = "."
+        if column == 0 or self.table[row][column-1] == "." or  column == 9 or self.table[row][column+1] == ".":
+            if column != 0:
+                self.table[row][column-1] = "."
+            if column != 9:
+                self.table[row][column+1] = "."
 
 
     def fill_corners_and_adj(self,row , column,shape):
