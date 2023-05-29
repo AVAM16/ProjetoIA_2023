@@ -70,9 +70,11 @@ class Board:
         """
         # TODO
         from sys import stdin
-        row = stdin.readline().split().pop(0)
+        row = stdin.readline().split()
+        row.pop(0)
         row = [int(x) for x in row]
-        column = stdin.readline().split().pop(0)
+        column = stdin.readline().split()
+        column.pop(0)
         column = [int(x) for x in column]
         b = Board()
         b.rowtip = row
@@ -83,12 +85,14 @@ class Board:
         for i in range(10):
             if b.coltip[i] == 0:
                 b.table[:, i] = np.full((1,10), ".") 
-        n = int(stdin.readline().strip())
+        n = int(stdin.readline())
         x = 0
         while x < n:
-            hint = stdin.readline().split().pop(0)
+            hint = stdin.readline().split()
+            hint.pop(0)
+            shape = hint.pop(2)
             hint = [int(x) for x in hint]
-            b.get_hint(tuple(hint))
+            b.get_hint((hint[0],hint[1],shape))
             x += 1
         return b
 
@@ -97,35 +101,37 @@ class Board:
 
 
     def fill_corners(self,row,column):
-        if row == 9:
-            if column == 9:
+        if row != 9:
+            if column != 9:
                 self.table[row+1][column+1] = "."
-            if column == 0:
+            if column != 0:
                 self.table[row+1][column-1] = "."
-        if row == 0:
-            if column == 9:
+        if row != 0:
+            if column != 9:
                 self.table[row-1][column+1] = "."
-            if column == 0:
+            if column != 0:
                 self.table[row-1][column-1] = "."
 
     def fill_adj(self,row,column,shape):
-        if shape != "B" or shape != "M" or row != 9:
+        if shape != "T" and shape != "M" and row != 9:
             self.table[row+1][column] = "."
-        if shape != "L" or shape != "M" or column != 9:
+        if shape != "L" and shape != "M" and column != 9:
             self.table[row][column+1] = "."
-        if shape != "R" or shape != "M" or column != 0:
+        if shape != "R" and shape != "M" and column != 0:
             self.table[row][column-1] = "."
-        if shape != "T" or shape != "M" or row != 0:
+        if shape != "B" and shape != "M" and row != 0:
             self.table[row-1][column] = "."
-        if row == 0 or self.table[row-1][column] == "." or row == 9 or self.table[row+1][column] == ".":
-            if row != 0:
+        if shape == "M" and (row == 0 or self.table[row-1][column] == "." or row == 9 or self.table[row+1][column] == ".") and ((column != 0 and self.table[row][column-1] != ".") and  (column != 9 and self.table[row][column+1] != ".")):
+            print("oi1")
+            if row != 1:
                 self.table[row-1][column] = "."
-            if row != 9:
+            if row != 8:
                 self.table[row+1][column] = "."
-        if column == 0 or self.table[row][column-1] == "." or  column == 9 or self.table[row][column+1] == ".":
-            if column != 0:
+        if shape == "M" and (column == 0 or self.table[row][column-1] == "." or  column == 9 or self.table[row][column+1] == ".") and ((row != 0 and self.table[row-1][column] != ".") and (row != 9 and self.table[row+1][column] != ".")):
+            print("oi2")
+            if column != 1:
                 self.table[row][column-1] = "."
-            if column != 9:
+            if column != 8:
                 self.table[row][column+1] = "."
 
 
@@ -137,7 +143,7 @@ class Board:
         column = 0
         counter = 0
         while column < 10:
-            if self.table[row][column] != ".":
+            if self.table[row][column] != "." and self.table[row][column] != "T" and self.table[row][column] != "B" and self.table[row][column] != "C":
                 if (column == 0 or self.table[row][column-1] == ".") and (column != 9 and self.table[row][column+1] != "."):
                     self.table[row][column] = "L"
                     self.fill_corners_and_adj(row,column,"L")
@@ -157,10 +163,21 @@ class Board:
                     self.fill_corners(row,column)
                     self.coltip[column] -= 1
                     self.fleet[3] -= 1
+                print("giga nigga")
+                if (column == 0 or self.table[row][column-1] == ".") and (column == 9 or self.table[row][column+1] == ".") and (row == 9 or self.table[row+1][column] == "."):
+                    self.table[row][column] = "B"
+                    self.fill_corners(row,column)
+                    self.coltip[column] -= 1
+
+                elif (column == 0 or self.table[row][column-1] == ".") and (column == 9 or self.table[row][column+1] == ".") and (row == 0 or self.table[row-1][column] == "."):
+                    self.table[row][column] = "T"
+                    self.fill_corners(row,column)
+                    self.coltip[column] -= 1
 
 
-                if (column == 0 or self.table[row][column-1] == ".") and (column == 9 or self.table[row][column+1] == "."):
+                elif (column == 0 or self.table[row][column-1] == ".") and (column == 9 or self.table[row][column+1] == "."):
                     self.table[row][column] = "S"
+                    print("nigger")
                     self.fill_corners(row,column)
                     self.coltip[column] -= 1
 
@@ -178,7 +195,8 @@ class Board:
         row = 0
         counter = 0
         while row < 10:
-            if self.table[row][column] == "-":
+            if self.table[row][column] != "." and self.table[row][column] != "T" and self.table[row][column] != "B" and self.table[row][column] != "C":
+                
                 if (row == 0 or self.table[row-1][column] == ".") and (row != 9 and self.table[row+1][column] != "."):
                     self.table[row][column] = "T"
                     self.fill_corners_and_adj(row,column,"T")
@@ -199,8 +217,18 @@ class Board:
                     self.rowtip[row] -= 1
                     self.fleet[3] -= 1
 
-                if (row == 0 or self.table[row-1][column] == ".") and (row == 9 or self.table[row+1][column] == "."):
+                if (row == 0 or self.table[row-1][column] == ".") and (row == 9 or self.table[row+1][column] == ".") and (column == 9 or self.table[row][column+1] == "."):
                     self.table[row][column] = "S"
+                    self.fill_corners(row,column)
+                    self.rowtip[row] -= 1
+
+                if (row == 0 or self.table[row-1][column] == ".") and (row == 9 or self.table[row+1][column] == "."):
+                    self.table[row][column] = "R"
+                    self.fill_corners(row,column)
+                    self.rowtip[row] -= 1
+
+                if (row == 0 or self.table[row-1][column] == ".") and (row == 9 or self.table[row+1][column] == ".") and (column == 0 or self.table[row][column-1] == "."):
+                    self.table[row][column] = "L"
                     self.fill_corners(row,column)
                     self.rowtip[row] -= 1
 
@@ -211,7 +239,7 @@ class Board:
                     self.table[row][column+1] = "."
                     self.rowtip[row] -= 1
                     counter += 1
-            column +=1
+            row +=1
         self.coltip[column] = 0
 
 
@@ -225,7 +253,7 @@ class Board:
                 if self.table[row][column] == "-":
                     counter +=1
                 column+=1
-            if counter == self.rowtip[row]:
+            if counter == self.rowtip[row] and counter != 0:
                 self.fill_row(row)
                 changed = 1
             if counter < self.rowtip[row]:
@@ -240,14 +268,14 @@ class Board:
             counter = 0
             row = 0
             while row<10:
-                if self.table[row][column] == "-":
+                if self.table[row][column] == "-" and counter != 0:
                     counter +=1
                 row+=1
             if counter == self.coltip[column]:
                 self.fill_column(column)
                 changed = 1
             if counter < self.coltip[column]:
-                return -1
+                return 0
             column+=1
         return changed
     
@@ -258,8 +286,8 @@ class Board:
         changed = 0
         while column<10:
             if self.coltip[column] == 0:
+                row = 0
                 while row<10:
-                    row = 0
                     if self.table[row][column] == "-":
                         self.table[row][column] = "."
                     row+=1
@@ -270,8 +298,8 @@ class Board:
             column+=1
         while row<10:
             if self.rowtip[row] == 0:
+                column = 0
                 while column<10:
-                    column = 0
                     if self.table[row][column] == "-":
                         self.table[row][column] = "."
                     column+=1
@@ -297,27 +325,61 @@ class Board:
             return 1
         return 0
     
+    def check_middle(self):
+        return 0
+
+    
+    def check_pieces(self):
+        row = 0
+        while row < 0:
+            column = 0
+            while column < 0:
+                if self.table[row][column] == "M":
+                    self.check_middle()
+                column += 1
+            row += 1
+            
+
+
+    
     def fill_board(self):
-        repeat = 0
+        repeat = 1
+        changed = 0
         while repeat != 0:
             repeat = 0
-            changed = self.check_rows()
-            if changed == -1:
-                return changed
-            if changed == 1:
-                repeat = 1
-            changed = self.check_columns()
-            if changed == -1:
-                return changed
-            if changed == 1:
-                repeat = 1
             changed = self.check_zeros()
             if changed == -1:
                 return changed
+            changed = self.check_rows()
+            print(changed)
+            if changed == -1:
+                return changed
+            if changed == 1:
+                print("niggers")
+                repeat = 1
+            changed = self.check_columns()
+            print(changed)
+            if changed == -1:
+                return changed
             if changed == 1:
                 repeat = 1
+            print(changed)
+            changed = self.check_zeros()
+            if changed == -1:
+                return changed
+            print(repeat)
         self.check_finish()
         return 0
+    
+    def check_tips(self):
+        row = 0
+        column = 0
+        while row < 10:
+            print(self.rowtip[row])
+            row += 1
+        while column < 10:
+            print(self.coltip[column])
+            column += 1
     
     
     def get_hint(self, hint:tuple):
@@ -334,23 +396,43 @@ class Board:
         if shape == "L":
             if column == 8 or self.table[row][column+2] == ".":
                 self.table[row][column+1] = "R"
+                self.rowtip[row] -= 1
+                self.coltip[column+1] -= 1
             else:
                 self.table[row][column+1] = "S"
+                self.rowtip[row] -= 1
+                self.coltip[column+1] -= 1
+                self.fill_corners(row,column+1)
         if shape == "R":
             if column == 1 or self.table[row][column-2] == ".":
-                self.table[row][column+1] = "L"
+                self.table[row][column-1] = "L"
+                self.rowtip[row] -= 1
+                self.coltip[column-1] -= 1
             else:
-                self.table[row][column+1] = "S"
+                self.table[row][column-1] = "S"
+                self.rowtip[row] -= 1
+                self.coltip[column-1] -= 1
+                self.fill_corners(row,column-1)
         if shape == "T":
             if row == 8 or self.table[row+2][column] == ".":
                 self.table[row+1][column] = "R"
+                self.rowtip[row+1] -= 1
+                self.coltip[column] -= 1
             else:
                 self.table[row+1][column] = "S"
+                self.rowtip[row+1] -= 1
+                self.coltip[column] -= 1
+                self.fill_corners(row+2,column)
         if shape == "B":
             if row == 1 or self.table[row-2][column] == ".":
                 self.table[row-1][column] = "R"
+                self.rowtip[row-1] -= 1
+                self.coltip[column] -= 1
             else:
                 self.table[row-1][column] = "S"
+                self.rowtip[row-1] -= 1
+                self.coltip[column] -= 1
+                self.fill_corners(row-1,column)
         if shape == "C":
             self.fleet[3] -= 1
 
