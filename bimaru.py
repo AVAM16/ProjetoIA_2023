@@ -282,6 +282,21 @@ class Board:
             row+=1
         return changed
     
+
+    def check_finish(self):
+        column = 0
+        counter = 0
+        while column<10:
+            row = 0
+            while row<10:
+                if self.table[row][column] == "-":
+                    counter +=1
+                row+=1   
+            column+=1
+        if counter == 0:
+            return 1
+        return 0
+    
     def fill_board(self):
         repeat = 0
         while repeat != 0:
@@ -301,21 +316,7 @@ class Board:
                 return changed
             if changed == 1:
                 repeat = 1
-        return 0
-        
-    
-    def check_finish(self):
-        column = 0
-        counter = 0
-        while column<10:
-            row = 0
-            while row<10:
-                if self.table[row][column] == "-":
-                    counter +=1
-                row+=1   
-            column+=1
-        if counter == 0:
-            return 1
+        self.check_finish()
         return 0
     
     
@@ -352,7 +353,13 @@ class Board:
                 self.table[row-1][column] = "S"
         if shape == "C":
             self.fleet[3] -= 1
-        
+
+
+    def output_board(self):
+        for row in range (10):
+            for column in range (10):
+                print(self.table[row][column],end='')
+            print()
 
 
 
@@ -393,7 +400,10 @@ class Bimaru(Problem):
 
 
 if __name__ == "__main__":
-    b = Board().parse_instance
+    b = Board.parse_instance()
+    b.fill_board()
+    b.output_board()
+
     # TODO:
     # Ler o ficheiro do standard input,
     # Usar uma técnica de procura para resolver a instância,
