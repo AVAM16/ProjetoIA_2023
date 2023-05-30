@@ -122,13 +122,11 @@ class Board:
         if shape != "B" and shape != "M" and row != 0:
             self.table[row-1][column] = "."
         if shape == "M" and (row == 0 or self.table[row-1][column] == "." or row == 9 or self.table[row+1][column] == ".") and ((column != 0 and self.table[row][column-1] != ".") and  (column != 9 and self.table[row][column+1] != ".")):
-            print("oi1")
             if row != 1:
                 self.table[row-1][column] = "."
             if row != 8:
                 self.table[row+1][column] = "."
         if shape == "M" and (column == 0 or self.table[row][column-1] == "." or  column == 9 or self.table[row][column+1] == ".") and ((row != 0 and self.table[row-1][column] != ".") and (row != 9 and self.table[row+1][column] != ".")):
-            print("oi2")
             if column != 1:
                 self.table[row][column-1] = "."
             if column != 8:
@@ -187,17 +185,16 @@ class Board:
         counter = 0
         while column < 10:
             if self.table[row][column] != "." and self.table[row][column] != "T" and self.table[row][column] != "B" and self.table[row][column] != "C":
-                print("oi3")
                 if (column == 0 or self.table[row][column-1] == ".") and (column != 9 and self.table[row][column+1] != "."):
                     self.fill_corners_and_adj(row,column,"L")
-                    if self.table[row][column] != "S":
+                    if self.table[row][column] != "S" or self.table[row][column] != "L":
                         self.coltip[column] -= 1
                     self.table[row][column] = "L"
                     counter += 1
 
                 if  column != 0 and (self.table[row][column-1] != ".") and (column == 9 or self.table[row][column+1] == "."):
                     self.fill_corners_and_adj(row,column,"R")
-                    if self.table[row][column] != "S":
+                    if self.table[row][column] != "S" or self.table[row][column] != "R":
                         self.coltip[column] -= 1
                     self.table[row][column] = "R"
                     counter += 1
@@ -206,26 +203,12 @@ class Board:
 
                 if (column == 0 or self.table[row][column-1] == ".") and (column == 9 or self.table[row][column+1] == ".") and (row == 0 or self.table[row-1][column] == ".") and (row == 9 or self.table[row+1][column] == "."):
                     self.fill_corners(row,column)
-                    if self.table[row][column] != "S":
+                    if self.table[row][column] != "S" or self.table[row][column] != "C":
                         self.coltip[column] -= 1
                     self.table[row][column] = "C"
                     self.fleet[3] -= 1
-                print("giga nigga")
-                if (column == 0 or self.table[row][column-1] == ".") and (column == 9 or self.table[row][column+1] == ".") and (row == 9 or self.table[row+1][column] == "."):
-                    self.fill_corners(row,column)
-                    if self.table[row][column] != "S":
-                        self.coltip[column] -= 1
-                    self.table[row][column] = "B"
 
-                elif (column == 0 or self.table[row][column-1] == ".") and (column == 9 or self.table[row][column+1] == ".") and (row == 0 or self.table[row-1][column] == "."):
-                    self.fill_corners(row,column)
-                    if self.table[row][column] != "S":
-                        self.coltip[column] -= 1
-                    self.table[row][column] = "T"
-
-
-                elif (column == 0 or self.table[row][column-1] == ".") and (column == 9 or self.table[row][column+1] == "."):
-                    print("nigger")
+                if (column == 0 or self.table[row][column-1] == ".") and (column == 9 or self.table[row][column+1] == "."):
                     self.fill_corners(row,column)
                     if self.table[row][column] != "S":
                         self.coltip[column] -= 1
@@ -237,7 +220,7 @@ class Board:
                         self.table[row-1][column] = "."
                     if row != 9:
                         self.table[row+1][column] = "."
-                    if self.table[row][column] != "S":
+                    if self.table[row][column] != "S" or self.table[row][column] != "M":
                         self.coltip[column] -= 1
                     self.table[row][column] = "M"
                     counter += 1
@@ -248,18 +231,17 @@ class Board:
         row = 0
         counter = 0
         while row < 10:
-            if self.table[row][column] != "." and self.table[row][column] != "T" and self.table[row][column] != "B" and self.table[row][column] != "C":
-                print("oi2")
+            if self.table[row][column] != "." and self.table[row][column] != "L" and self.table[row][column] != "R" and self.table[row][column] != "C":
                 if (row == 0 or self.table[row-1][column] == ".") and (row != 9 and self.table[row+1][column] != "."):
                     self.fill_corners_and_adj(row,column,"T")
-                    if self.table[row][column] != "S":
+                    if self.table[row][column] != "S" or self.table[row][column] != "T":
                         self.rowtip[row] -= 1
                     self.table[row][column] = "T"
                     counter += 1
 
                 if (row != 0 and self.table[row-1][column] != ".") and (row == 9 or self.table[row+1][column] == "."):
                     self.fill_corners_and_adj(row,column,"B")
-                    if self.table[row][column] != "S":
+                    if self.table[row][column] != "S" or self.table[row][column] != "B":
                         self.rowtip[row] -= 1
                     self.table[row][column] = "B"
                     counter += 1
@@ -268,7 +250,7 @@ class Board:
 
                 if (column == 0 or self.table[row][column-1] == ".") and (column == 9 or self.table[row][column+1] == ".") and (row == 0 or self.table[row-1][column] == ".") and (row == 9 or self.table[row+1][column] == "."):
                     self.fill_corners(row,column)
-                    if self.table[row][column] != "S":
+                    if self.table[row][column] != "S" or self.table[row][column] != "C":
                         self.rowtip[row] -= 1
                     self.table[row][column] = "C"
                     self.fleet[3] -= 1
@@ -279,25 +261,13 @@ class Board:
                         self.rowtip[row] -= 1
                     self.table[row][column] = "S"
 
-                if (row == 0 or self.table[row-1][column] == ".") and (row == 9 or self.table[row+1][column] == "."):
-                    self.fill_corners(row,column)
-                    if self.table[row][column] != "S":
-                        self.rowtip[row] -= 1
-                    self.table[row][column] = "R"
-
-                if (row == 0 or self.table[row-1][column] == ".") and (row == 9 or self.table[row+1][column] == ".") and (column == 0 or self.table[row][column-1] == "."):
-                    self.fill_corners(row,column)
-                    if self.table[row][column] != "S":
-                        self.rowtip[row] -= 1
-                    self.table[row][column] = "L"
-
                 if (row == 0 or self.table[row-1][column] != ".") and (row == 9 or self.table[row+1][column] != "."):
                     self.fill_corners(row,column)
                     if column != 9:
                         self.table[row][column+1] = "."
                     if column != 0:
                         self.table[row][column-1] = "."
-                    if self.table[row][column] != "S":
+                    if self.table[row][column] != "S" or self.table[row][column] != "M":
                         self.rowtip[row] -= 1
                     self.table[row][column] = "M"
                     counter += 1
@@ -316,7 +286,6 @@ class Board:
                     counter +=1
                 column+=1
             if counter == self.rowtip[row]:
-                print("oi")
                 self.fill_row(row)
                 if counter != 0:
                     changed = 1
@@ -335,7 +304,7 @@ class Board:
                 if self.table[row][column] == "-":
                     counter +=1
                 row+=1
-            if counter == self.coltip[column]:
+            if counter == self.coltip[column] and counter != 0:
                 self.fill_column(column)
                 if counter != 0:
                     changed = 1
@@ -452,7 +421,6 @@ class Board:
 
     
     def check_pieces(self):
-        print("Higgers")
         row = 0
         while row < 10:
             column = 0
@@ -463,7 +431,41 @@ class Board:
                     """ self.complete(row,column,self.table[row][column]) """
                 column += 1
             row += 1
+
+
+    def fix_ship(self,row,column):
+        print(row ,column)
+        print(self.table[row+1][column])
+        print(self.table[row-1][column])
+        if(column != 9):
+            print(self.table[row][column+1])
+        if (row == 9 or self.table[row+1][column] == ".") and (row == 0 or self.table[row-1][column] == ".") and (column == 9 or self.table[row][column+1] == ".") and (column == 0 or self.table[row][column-1]) == ".":
+            print("nigggggggggggga")
+            self.table[row][column] = "C"
+        elif (row == 9 or self.table[row+1][column] == ".") and (row == 0 or self.table[row-1][column] == ".") and (column == 9 or self.table[row][column+1] == ".") and (column != 0 and self.table[row][column-1]) != "." and (column != 0 or self.table[row][column-1] != "-"):
+            self.table[row][column] = "R"
+        elif (row == 9 or self.table[row+1][column] == ".") and (row == 0 or self.table[row-1][column] == ".") and (column != 9 and self.table[row][column+1] != ".") and (column == 0 or self.table[row][column-1]) == "." and (column != 9 or self.table[row][column+1] != "-"):
+            self.table[row][column] = "L"
+        elif (row != 9 and self.table[row+1][column] != ".") and (row == 0 or self.table[row-1][column] == ".") and (column == 9 or self.table[row][column+1] == ".") and (column == 0 or self.table[row][column-1]) == "." and (row != 9 or self.table[row+1][column] != "-"):
+            self.table[row][column] = "T"
+        elif (row == 9 or self.table[row+1][column] == ".") and (row != 0 and self.table[row-1][column] != ".") and (column == 9 or self.table[row][column+1] == ".") and (column == 0 or self.table[row][column-1]) == "." and (row != 0 or self.table[row-1][column] != "-"):
+            self.table[row][column] = "B"
+        elif (row == 9 or self.table[row+1][column] == ".") and (row == 0 or self.table[row-1][column] == ".") and (column != 9 and self.table[row][column+1] != ".") and (column != 0 and self.table[row][column-1]) != "." and (column != 0 or self.table[row][column-1] != "-") and (column != 9 or self.table[row][column+1] != "-"):
+            self.table[row][column] = "M"
+        elif (row != 9 and self.table[row+1][column] != ".") and (row != 0 and self.table[row-1][column] != ".") and (column == 9 or self.table[row][column+1] == ".") and (column == 0 or self.table[row][column-1]) == "." and (row != 0 or self.table[row-1][column] != "-") and (row != 9 or self.table[row+1][column] != "-"):
+            self.table[row][column] = "M"
             
+    def fix_all_ships(self):
+        row=0
+        while row < 10:
+            column = 0
+            while column < 10:
+                if self.table[row][column] == "S":
+                    print(self.table[row][column])
+                    self.fix_ship(row,column)
+                column+=1
+            row+=1
+
 
 
     
@@ -490,7 +492,6 @@ class Board:
             if changed == 1:
                 repeat = 1
             """ self.check_pieces() """
-            self.output_board()
         return 0
 
     
@@ -568,9 +569,17 @@ class Bimaru(Problem):
 if __name__ == "__main__":
     b = Board.parse_instance()
     b.fill_board()
-    b.check_tips()
     b.check_pieces()
-    b.fill_board()
+    b.check_columns()
+    b.check_rows()
+    b.check_zeros()
+    b.check_columns()
+    b.check_rows()
+    b.check_zeros()
+    b.check_rows()
+    b.check_columns()
+    b.check_zeros()
+    b.fix_all_ships()
     b.output_board()
     b.check_tips()
     # TODO:
