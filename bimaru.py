@@ -522,7 +522,137 @@ class Board:
             for column in range (10):
                 print(self.table[row][column],end='')
             print()
+    
+    def get_boats_four(self):
+        boats = np.array([])
+        for row in range (10):
+            if self.rowtip[row] < 4:
+                continue
+            else:
+                for column in range (7):
+                    shape = self.table[row][column]
+                    shape2 = self.table[row][column+1]
+                    shape3 = self.table[row][column+2]
+                    shape4 = self.table[row][column+3]
+                    tip = self.coltip[column]
+                    tip2 = self.coltip[column+1]
+                    tip3 = self.coltip[column+2]
+                    tip4 = self.coltip[column+3]
+                    if shape == '-' and shape == 'l' and shape == 'S':
+                        if (shape2 == '-' or shape2 == 'S' or shape2 == 'm') and (shape3 == '-' or shape3 == 'S' or shape3 == 'm') and (shape4 == '-' or shape4 == 'S' or shape4 == 'r') and tip >= 1 and tip2 >= 1 and tip3 >= 1 and tip4 >= 1:
+                            boats = np.append(boats, (row, column, 4, 'h'))
+                    else:
+                        continue
+        for column in range (10):
+            if self.coltip[column] < 4:
+                continue
+            else:
+                for row in range (7):
+                    shape = self.table[row][column]
+                    shape2 = self.table[row+1][column]
+                    shape3 = self.table[row+2][column]
+                    shape4 = self.table[row+3][column]
+                    tip = self.rowtip[row]
+                    tip2 = self.rowtip[row+1]
+                    tip3 = self.rowtip[row+2]
+                    tip4 = self.rowtip[row+3]
+                    if shape == '-' and shape == 't' and shape == 'S':
+                        if (shape2 == '-' or shape2 == 'S' or shape2 == 'm') and (shape3 == '-' or shape3 == 'S' or shape3 == 'm') and (shape4 == '-' or shape4 == 'S' or shape4 == 'b') and tip >= 1 and tip2 >= 1 and tip3 >= 1 and tip4 >= 1:
+                            boats = np.append(boats, (row, column, 4, 'v'))
+                    else:
+                        continue
+        return boats
 
+
+    def get_boats_three(self):
+        boats = np.array([])
+        for row in range (10):
+            if self.rowtip[row] < 3:
+                continue
+            else:
+                for column in range (8):
+                    shape = self.table[row][column]
+                    shape2 = self.table[row][column+1]
+                    shape3 = self.table[row][column+2]
+                    tip = self.coltip[column]
+                    tip2 = self.coltip[column+1]
+                    tip3 = self.coltip[column+2]
+                    if shape == '-' and shape == 'l' and shape == 'S':
+                        if (shape2 == '-' or shape2 == 'S' or shape2 == 'm') and (shape3 == '-' or shape3 == 'S' or shape3 == 'r') and tip >= 1 and tip2 >= 1 and tip3 >= 1:
+                            boats = np.append(boats, (row, column, 3, 'h'))
+                    else:
+                        continue
+        for column in range (10):
+            if self.coltip[column] < 3:
+                continue
+            else:
+                for row in range (8):
+                    shape = self.table[row][column]
+                    shape2 = self.table[row+1][column]
+                    shape3 = self.table[row+2][column]
+                    tip = self.rowtip[row]
+                    tip2 = self.rowtip[row+1]
+                    tip3 = self.rowtip[row+2]
+                    if shape == '-' and shape == 't' and shape == 'S':
+                        if (shape2 == '-' or shape2 == 'S' or shape2 == 'm') and (shape3 == '-' or shape3 == 'S' or shape3 == 'b') and tip >= 1 and tip2 >= 1 and tip3 >= 1:
+                            boats = np.append(boats, (row, column, 3, 'v'))
+                    else:
+                        continue
+        return boats
+
+
+    def get_boats_two(self):
+        boats = np.array([])
+        for row in range (10):
+            if self.rowtip[row] < 2:
+                continue
+            else:
+                for column in range (9):
+                    shape = self.table[row][column]
+                    shape2 = self.table[row][column+1]
+                    tip = self.coltip[column]
+                    tip2 = self.coltip[column+1]
+                    if shape == '-' and shape == 'l' and shape == 'S':
+                        if (shape2 == '-' or shape2 == 'S' or shape2 == 'r') and tip >= 1 and tip2 >= 1:
+                            boats = np.append(boats, (row, column, 2, 'h'))
+                    else:
+                        continue
+        for column in range (10):
+            if self.coltip[column] < 2:
+                continue
+            else:
+                for row in range (9):
+                    shape = self.table[row][column]
+                    shape2 = self.table[row+1][column]
+                    tip = self.rowtip[row]
+                    tip2 = self.rowtip[row+1]
+                    if shape == '-' and shape == 't' and shape == 'S':
+                        if (shape2 == '-' or shape2 == 'S' or shape2 == 'b') and tip >= 1 and tip2 >= 1:
+                            boats = np.append(boats, (row, column, 2, 'v'))
+                    else:
+                        continue
+        return boats
+    
+    def get_boats_one(self):
+        boats = np.array([])
+        for row in range(10):
+            for column in range(10):
+                shape = self.table[row][column]
+                if self.rowtip[row] < 1 and self.coltip[column] < 1:
+                    continue
+                if shape == '-' or shape == 'S':
+                    boats = np.append(boats, (row, column, 1, 'o'))
+        return boats
+
+    def get_boats(self):
+        if self.fleet[0] > 0:
+            self.get_boats_four
+        elif self.fleet[1] > 0:
+            self.get_boats_three
+        elif self.fleet[2] > 0:
+            self.get_boats_two
+        else:
+            self.get_boats_one
 
 
 class Bimaru(Problem):
