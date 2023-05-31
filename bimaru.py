@@ -466,15 +466,14 @@ class Board:
     def fill_board(self):
         repeat = 1
         changed = 0
+        counter = 0
         while repeat != 0:
             repeat = 0
             changed = self.check_zeros()
             if changed == -1:
                 return changed
-            
             if changed == 1:
                 repeat = 1
-            """self.check_pieces() """
             changed = self.check_rows()
             if changed == -1:
                 return changed
@@ -485,7 +484,20 @@ class Board:
                 return changed
             if changed == 1:
                 repeat = 1
-            """ self.check_pieces() """
+            counter += 1
+        if counter > 1:
+            return 1
+        return 0
+    
+    def fill_all(self):
+        repeat = 1
+        while repeat != 0:
+            repeat = 0
+            changed = self.fill_board()
+            if changed == 1:
+                repeat = 1
+            self.check_pieces()
+            self.fix_all_ships()
         return 0
 
     
@@ -693,10 +705,7 @@ class Bimaru(Problem):
 
 if __name__ == "__main__":
     b = Board.parse_instance()
-    b.fill_board()
-    b.check_pieces()
-    b.fill_board()
-    b.fix_all_ships()
+    b.fill_all()
     b.output_board()
     b.check_tips()
     # TODO:
