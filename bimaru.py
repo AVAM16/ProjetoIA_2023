@@ -421,21 +421,20 @@ class Board:
 
   
 
-
     def fix_ship(self,row,column):
         if (row == 9 or self.table[row+1][column] == ".") and (row == 0 or self.table[row-1][column] == ".") and (column == 9 or self.table[row][column+1] == ".") and (column == 0 or self.table[row][column-1] == "."):
             self.table[row][column] = "c"
-        elif (row == 9 or self.table[row+1][column] == ".") and (row == 0 or self.table[row-1][column] == ".") and (column == 9 or self.table[row][column+1] == ".") and (column != 0 and self.table[row][column-1] != ".") and (column != 0 or self.table[row][column-1] != "-"):
+        elif (row == 9 or self.table[row+1][column] == ".") and (row == 0 or self.table[row-1][column] == ".") and (column == 9 or self.table[row][column+1] == ".") and (column != 0 and self.table[row][column-1] != ".") and (column != 0 and self.table[row][column-1] != "-"):
             self.table[row][column] = "r"
-        elif (row == 9 or self.table[row+1][column] == ".") and (row == 0 or self.table[row-1][column] == ".") and (column != 9 and self.table[row][column+1] != ".") and (column == 0 or self.table[row][column-1] == ".") and (column != 9 or self.table[row][column+1] != "-"):
+        elif (row == 9 or self.table[row+1][column] == ".") and (row == 0 or self.table[row-1][column] == ".") and (column != 9 and self.table[row][column+1] != ".") and (column == 0 or self.table[row][column-1] == ".") and (column != 9 and self.table[row][column+1] != "-"):
             self.table[row][column] = "l"
-        elif (row != 9 and self.table[row+1][column] != ".") and (row == 0 or self.table[row-1][column] == ".") and (column == 9 or self.table[row][column+1] == ".") and (column == 0 or self.table[row][column-1] == ".") and (row != 9 or self.table[row+1][column] != "-"):
+        elif (row != 9 and self.table[row+1][column] != ".") and (row == 0 or self.table[row-1][column] == ".") and (column == 9 or self.table[row][column+1] == ".") and (column == 0 or self.table[row][column-1] == ".") and (row != 9 and self.table[row+1][column] != "-"):
             self.table[row][column] = "t"
-        elif (row == 9 or self.table[row+1][column] == ".") and (row != 0 and self.table[row-1][column] != ".") and (column == 9 or self.table[row][column+1] == ".") and (column == 0 or self.table[row][column-1] == ".") and (row != 0 or self.table[row-1][column] != "-"):
+        elif (row == 9 or self.table[row+1][column] == ".") and (row != 0 and self.table[row-1][column] != ".") and (column == 9 or self.table[row][column+1] == ".") and (column == 0 or self.table[row][column-1] == ".") and (row != 0 and self.table[row-1][column] != "-"):
             self.table[row][column] = "b"
-        elif (row == 9 or self.table[row+1][column] == ".") and (row == 0 or self.table[row-1][column] == ".") and (column != 9 and self.table[row][column+1] != ".") and (column != 0 and self.table[row][column-1] != ".") and (column != 0 or self.table[row][column-1] != "-") and (column != 9 or self.table[row][column+1] != "-"):
+        elif (row == 9 or self.table[row+1][column] == ".") and (row == 0 or self.table[row-1][column] == ".") and (column != 9 and self.table[row][column+1] != ".") and (column != 0 and self.table[row][column-1] != ".") and (column != 0 and self.table[row][column-1] != "-") and (column != 9 and self.table[row][column+1] != "-"):
             self.table[row][column] = "m"
-        elif (row != 9 and self.table[row+1][column] != ".") and (row != 0 and self.table[row-1][column] != ".") and (column == 9 or self.table[row][column+1] == ".") and (column == 0 or self.table[row][column-1] == ".") and (row != 0 or self.table[row-1][column] != "-") and (row != 9 or self.table[row+1][column] != "-"):
+        elif (row != 9 and self.table[row+1][column] != ".") and (row != 0 and self.table[row-1][column] != ".") and (column == 9 or self.table[row][column+1] == ".") and (column == 0 or self.table[row][column-1] == ".") and (row != 0 and self.table[row-1][column] != "-") and (row != 9 and self.table[row+1][column] != "-"):
             self.table[row][column] = "m"
             
     def fix_all_ships(self):
@@ -499,6 +498,50 @@ class Board:
             self.check_pieces()
             self.fix_all_ships()
         return 0
+    
+    def count_ships(self):
+        self.fleet[0] = 4
+        self.fleet[1] = 3
+        self.fleet[2] = 2
+        self.fleet[3] = 1
+        row = 0
+        while row < 10:
+            column = 0
+            while column < 10:
+                counter = 0
+                if self.table[row][column] == "c":
+                    self.fleet[0] -= 1
+                elif self.table[row][column] == "l":
+                    repeat = 0
+                    while repeat == 0:
+                        if column + counter == 10:
+                            return -1
+                        elif self.table[row][column+counter] == "r":
+                            repeat = 1
+                            self.fleet[counter] -= 1
+                        elif self.table[row][column+counter] == "m":
+                            counter += 1
+                        elif self.table[row][column+counter] == "l":
+                            counter += 1
+                        else:
+                            return -1
+                elif self.table[row][column] == "t":
+                    repeat = 0
+                    while repeat == 0:
+                        if row + counter == 10:
+                            return -1
+                        elif self.table[row+counter][column] == "b":
+                            repeat = 1
+                            self.fleet[counter] -= 1
+                        elif self.table[row+counter][column] == "m":
+                            counter += 1
+                        elif self.table[row+counter][column] == "t":
+                            counter += 1
+                        else:
+                            return -1
+                column += 1
+            row += 1
+
 
     
     def check_tips(self):
@@ -707,7 +750,11 @@ if __name__ == "__main__":
     b = Board.parse_instance()
     b.fill_all()
     b.output_board()
-    b.check_tips()
+    b.count_ships()
+    print(b.fleet[0])
+    print(b.fleet[1])
+    print(b.fleet[2])
+    print(b.fleet[3])
     # TODO:
     # Ler o ficheiro do standard input,
     # Usar uma técnica de procura para resolver a instância,
