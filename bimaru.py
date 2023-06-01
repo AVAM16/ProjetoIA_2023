@@ -98,10 +98,15 @@ class Board:
             hint = [int(x) for x in hint]
             b.get_hint((hint[0],hint[1],shape))
             x += 1
+        row = 0
+        column = 0
+        while row < 10:
+            while column < 10:
+                if b.table[row][column] != "." and b.table[row][column] != "c":
+                    b.complete(row,column,b.table[row][column])
+                column += 1
+            row += 1
         return b
-
-    # TODO: outros metodos da classe
-    """"W (water), C (circle), T (top), M (middle), B (bottom), L (left) e R (right)"""
 
 
     def fill_corners(self,row,column):
@@ -503,7 +508,8 @@ class Board:
             self.fix_all_ships()
         return 0
     
-    def insert_boat(self,boat):
+    def place_boat(self, boat):
+        print(boat)
         if boat[3] == "o":
             self.fill_corners_and_adj(boat[0],boat[1],"c")
             self.table[boat[0]][boat[1]] = "c"
@@ -598,11 +604,23 @@ class Board:
         row = 0
         column = 0
         while row < 10:
-            print(self.rowtip[row])
+            #print(self.rowtip[row])
+            if self.rowtip[row] == 10:
+                return -1
             row += 1
         while column < 10:
-            print(self.coltip[column])
+            #print(self.coltip[column])
+            if self.coltip[column] == 10:
+                return -1
             column += 1
+
+    def check_ships(self):
+        counter = 0
+        while counter < 4:
+            if board.fleet[counter] != 0:
+                return -1
+            counter += 1
+        return 0
     
     
     def get_hint(self, hint:tuple):
@@ -615,7 +633,6 @@ class Board:
             self.rowtip[row] -= 1
             self.coltip[column] -= 1
             self.fill_corners_and_adj(row,column,shape)
-            self.complete(row,column,shape)
         else:
             self.table[row][column] = "."
         if shape == "c":
@@ -771,13 +788,13 @@ class Board:
 
     def get_boats(self):
         if self.fleet[0] > 0:
-            return self.get_boats_four
+            return self.get_boats_four()
         elif self.fleet[1] > 0:
-            return self.get_boats_three
+            return self.get_boats_three()
         elif self.fleet[2] > 0:
-            return self.get_boats_two
+            return self.get_boats_two()
         else:
-            return self.get_boats_one
+            return self.get_boats_one()
 
 
 class Bimaru(Problem):
@@ -789,21 +806,27 @@ class Bimaru(Problem):
         pass
 
     def actions(self, state: BimaruState):
-        return state.board.get_boats()
+        print(state.board.get_boats())
 
     def result(self, state: BimaruState, action):
         new_state = copy.deepcopy(state)
+        new_state.board.fleet = copy.deepcopy(state.board.fleet)
+        new_state.board.coltip = copy.deepcopy(state.board.coltip)
+        new_state.board.table = copy.deepcopy(state.board.table)
+        new_state.board.rowtip = copy.deepcopy(state.board.rowtip)
         new_state.board.place_boat(action)
+        new_state.board.fill_all()
+        new_state.board.output_board()
+        new_state.board.count_ships()
         return new_state
 
     def goal_test(self, state: BimaruState):
-        """ state.board =  """
-        """Retorna True se e só se o estado passado como argumento é
-        um estado objetivo. Deve verificar se todas as posições do tabuleiro
-        estão preenchidas de acordo com as regras do problema."""
-        # TODO
-        pass
-
+        if state.board.check_tips() == -1:
+            return False
+        if state.board.check_ships() == -1:
+            return False
+        return True
+        
     def h(self, node: Node):
         """Função heuristica utilizada para a procura A*."""
         # TODO
@@ -816,8 +839,8 @@ if __name__ == "__main__":
     board = Board.parse_instance()
     b = Bimaru(board)
     initial_state=BimaruState(copy.copy(b.board))
-    if b.goal_test(initial_state):
-        initial_state.board.output_board()
-    else:
-        b.actions(initial_state)
-    pass
+    b.initial=initial_state
+    solution = depth_first_tree_search(b)
+    if solution != None:
+        solution.state.board.output_board()
+    exit(0)
