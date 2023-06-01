@@ -646,7 +646,7 @@ class Board:
             print()
     
     def get_boats_four(self):
-        boats = np.array([])
+        boats = []
         for row in range (10):
             rowt = self.rowtip[row]
             for column in range (7):
@@ -666,7 +666,7 @@ class Board:
                 tip4 = self.coltip[column+3]
                 if (shape == '-' and tip >= 1) or shape == 'l' or shape == 'S':
                     if ((shape2 == '-' and tip2 >= 1) or shape2 == 'S' or shape2 == 'm') and ((shape3 == '-' and tip3 >= 1) or shape3 == 'S' or shape3 == 'm') and ((shape4 == '-' and tip4 >= 1) or shape4 == 'S' or shape4 == 'r'):
-                        boats = np.append(boats, (row, column, 4, 'h'))
+                        boats.append((row, column, 4, 'h'))
                 else:
                     continue
         for column in range (10):
@@ -688,14 +688,14 @@ class Board:
                 tip4 = self.rowtip[row+3]
                 if (shape == '-' and tip >= 1) or shape == 't' or shape == 'S':
                     if ((shape2 == '-' and tip2 >= 1) or shape2 == 'S' or shape2 == 'm') and ((shape3 == '-' and tip3 >= 1) or shape3 == 'S' or shape3 == 'm') and ((shape4 == '-' and tip4 >= 1) or shape4 == 'S' or shape4 == 'b'):
-                        boats = np.append(boats, (row, column, 4, 'v'))
+                        boats.append((row, column, 4, 'v'))
                 else:
                     continue
         return boats
 
 
     def get_boats_three(self):
-        boats = np.array([])
+        boats = []
         for row in range (10):
             rowt = self.rowtip[row]
             for column in range (8):
@@ -712,7 +712,7 @@ class Board:
                 tip3 = self.coltip[column+2]
                 if (shape == '-' and tip >= 1) or shape == 'l' or shape == 'S':
                     if ((shape2 == '-' and tip2 >= 1) or shape2 == 'S' or shape2 == 'm') and ((shape3 == '-' and tip3 >= 1) or shape3 == 'S' or shape3 == 'r'):
-                        boats = np.append(boats, (row, column, 3, 'h'))
+                        boats.append((row, column, 3, 'h'))
                 else:
                     continue
         for column in range (10):
@@ -731,14 +731,14 @@ class Board:
                 tip3 = self.rowtip[row+2]
                 if (shape == '-' and tip >= 1) or shape == 't' or shape == 'S':
                     if ((shape2 == '-' and tip2 >= 1) or shape2 == 'S' or shape2 == 'm') and ((shape3 == '-' and tip3 >= 1) or shape3 == 'S' or shape3 == 'b'):
-                        boats = np.append(boats, (row, column, 3, 'v'))
+                        boats.append((row, column, 3, 'v'))
                 else:
                     continue
         return boats
 
 
     def get_boats_two(self):
-        boats = np.array([])
+        boats = []
         for row in range (10):
             rowt = self.rowtip[row]
             for column in range (9):
@@ -752,7 +752,7 @@ class Board:
                 tip2 = self.coltip[column+1]
                 if (shape == '-' and tip >= 1) or shape == 'l' or shape == 'S':
                     if ((shape2 == '-' and tip2 >= 1) or shape2 == 'S' or shape2 == 'r'):
-                        boats = np.append(boats, (row, column, 2, 'h'))
+                        boats.append((row, column, 2, 'h'))
                 else:
                     continue
         for column in range (10):
@@ -768,7 +768,7 @@ class Board:
                 tip2 = self.rowtip[row+1]
                 if (shape == '-' and tip >= 1) or shape == 't' or shape == 'S':
                     if ((shape2 == '-' and tip2 >= 1) or shape2 == 'S' or shape2 == 'b'):
-                        boats = np.append(boats, (row, column, 2, 'v'))
+                        boats.append((row, column, 2, 'v'))
                 else:
                     continue
         return boats
@@ -776,14 +776,14 @@ class Board:
 
     
     def get_boats_one(self):
-        boats = np.array([])
+        boats = []
         for row in range(10):
             for column in range(10):
                 shape = self.table[row][column]
                 if self.rowtip[row] < 1 and self.coltip[column] < 1:
                     continue
                 if (shape == '-' and self.rowtip[row] >= 1 and self.coltip[column] >= 1) or shape == 'S':
-                    boats = np.append(boats, (row, column, 1, 'o'))
+                    boats.append((row, column, 1, 'o'))
         return boats
 
     def get_boats(self):
@@ -807,6 +807,7 @@ class Bimaru(Problem):
 
     def actions(self, state: BimaruState):
         print(state.board.get_boats())
+        return state.board.get_boats()
 
     def result(self, state: BimaruState, action):
         new_state = copy.deepcopy(state)
