@@ -6,6 +6,8 @@
 # 102503 Artur Martins
 # 102938 Francisco Caetano Fortunato
 
+import copy
+
 import sys
 from search import (
     Problem,
@@ -28,6 +30,8 @@ class BimaruState:
 
     def __lt__(self, other):
         return self.id < other.id
+    def get_board(self,board):
+        self.board = board
 
     # TODO: outros metodos da classe
 
@@ -688,6 +692,8 @@ class Board:
                         continue
         return boats
     
+
+    
     def get_boats_one(self):
         boats = np.array([])
         for row in range(10):
@@ -701,37 +707,33 @@ class Board:
 
     def get_boats(self):
         if self.fleet[0] > 0:
-            self.get_boats_four
+            return self.get_boats_four
         elif self.fleet[1] > 0:
-            self.get_boats_three
+            return self.get_boats_three
         elif self.fleet[2] > 0:
-            self.get_boats_two
+            return self.get_boats_two
         else:
-            self.get_boats_one
+            return self.get_boats_one
 
 
 class Bimaru(Problem):
     def __init__(self, board: Board):
-        """O construtor especifica o estado inicial."""
-        # TODO
+        self.board = board
+        self.board.fill_all()
+        self.board.output_board()
+        self.board.count_ships()
         pass
 
     def actions(self, state: BimaruState):
-        """Retorna uma lista de ações que podem ser executadas a
-        partir do estado passado como argumento."""
-        
-        # TODO
-        pass
+        return state.board.get_boats()
 
     def result(self, state: BimaruState, action):
-        """Retorna o estado resultante de executar a 'action' sobre
-        'state' passado como argumento. A ação a executar deve ser uma
-        das presentes na lista obtida pela execução de
-        self.actions(state)."""
-        # TODO
-        pass
+        new_state = copy.deepcopy(state)
+        new_state.board.place_boat(action)
+        return new_state
 
     def goal_test(self, state: BimaruState):
+        """ state.board =  """
         """Retorna True se e só se o estado passado como argumento é
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
         estão preenchidas de acordo com as regras do problema."""
@@ -747,17 +749,11 @@ class Bimaru(Problem):
 
 
 if __name__ == "__main__":
-    b = Board.parse_instance()
-    b.fill_all()
-    b.output_board()
-    b.count_ships()
-    print(b.fleet[0])
-    print(b.fleet[1])
-    print(b.fleet[2])
-    print(b.fleet[3])
-    # TODO:
-    # Ler o ficheiro do standard input,
-    # Usar uma técnica de procura para resolver a instância,
-    # Retirar a solução a partir do nó resultante,
-    # Imprimir para o standard output no formato indicado.
+    board = Board.parse_instance()
+    b = Bimaru(board)
+    initial_state=BimaruState(copy.copy(b.board))
+    if b.goal_test(initial_state):
+        initial_state.board.output_board()
+    else:
+        b.actions(initial_state)
     pass
