@@ -503,6 +503,52 @@ class Board:
             self.fix_all_ships()
         return 0
     
+    def insert_boat(self,boat):
+        if boat[3] == "o":
+            self.fill_corners_and_adj(boat[0],boat[1],"c")
+            self.table[boat[0]][boat[1]] = "c"
+            self.coltip[boat[1]] -= 1
+            self.rowtip[boat[0]] -= 1
+        elif boat [3] == "h":
+            counter = 0
+            while counter < boat[2]:
+                if counter == 0:
+                    self.fill_corners_and_adj(boat[0],boat[1]+counter,"l")
+                    self.table[boat[0]][boat[1]+counter] = "l"
+                    self.coltip[boat[1]+counter] -= 1
+                    self.rowtip[boat[0]] -= 1
+                elif counter == boat[2] - 1:
+                    self.fill_corners_and_adj(boat[0],boat[1]+counter,"r")
+                    self.table[boat[0]][boat[1]+counter] = "r"
+                    self.coltip[boat[1]+counter] -= 1
+                    self.rowtip[boat[0]] -= 1
+                else:
+                    self.fill_corners_and_adj(boat[0],boat[1]+counter,"m")
+                    self.table[boat[0]][boat[1]+counter] = "m"
+                    self.coltip[boat[1]+counter] -= 1
+                    self.rowtip[boat[0]] -= 1
+                counter+=1
+        elif boat [3] == "v":
+            counter = 0
+            while counter < boat[2]:
+                if counter == 0:
+                    self.fill_corners_and_adj(boat[0]+counter,boat[1],"t")
+                    self.table[boat[0]+counter][boat[1]] = "t"
+                    self.coltip[boat[1]] -= 1
+                    self.rowtip[boat[0]+counter] -= 1
+                elif counter == boat[2] - 1:
+                    self.fill_corners_and_adj(boat[0]+counter,boat[1],"b")
+                    self.table[boat[0]+counter][boat[1]] = "b"
+                    self.coltip[boat[1]] -= 1
+                    self.rowtip[boat[0]+counter] -= 1
+                else:
+                    self.fill_corners_and_adj(boat[0]+counter,boat[1],"m")
+                    self.table[boat[0]+counter][boat[1]] = "m"
+                    self.coltip[boat[1]] -= 1
+                    self.rowtip[boat[0]+counter] -= 1
+                counter+=1
+
+    
     def count_ships(self):
         self.fleet[0] = 4
         self.fleet[1] = 3
