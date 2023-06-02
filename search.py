@@ -97,7 +97,6 @@ class Node:
 
     def child_node(self, problem, action):
         """[Figure 3.10]"""
-        print(action)
         next_state = problem.result(self.state, action)
         next_node = Node(next_state, self, action, problem.path_cost(self.path_cost, self.state, action, next_state))
         return next_node

@@ -501,52 +501,67 @@ class Board:
                         self.complete(row,column,self.table[row][column])
                     column += 1
                 row += 1
+            if self.verify_tips() == -1:
+                row = 0
+                while row < 10:
+                    self.rowtip[row] = -1
+                    row += 1
+
         return 0
     
     def place_boat(self, boat):
+
         if boat[3] == "o":
             self.fill_corners_and_adj(boat[0],boat[1],"c")
+            if self.table[boat[0]][boat[1]] == "-":
+                self.coltip[boat[1]] -= 1
+                self.rowtip[boat[0]] -= 1
             self.table[boat[0]][boat[1]] = "c"
-            self.coltip[boat[1]] -= 1
-            self.rowtip[boat[0]] -= 1
         elif boat [3] == "h":
             counter = 0
             while counter < boat[2]:
                 if counter == 0:
                     self.fill_corners_and_adj(boat[0],boat[1]+counter,"l")
+                    if self.table[boat[0]][boat[1]+counter] == "-":
+                        self.coltip[boat[1]+counter] -= 1
+                        self.rowtip[boat[0]] -= 1
                     self.table[boat[0]][boat[1]+counter] = "l"
-                    self.coltip[boat[1]+counter] -= 1
-                    self.rowtip[boat[0]] -= 1
                 elif counter == boat[2] - 1:
                     self.fill_corners_and_adj(boat[0],boat[1]+counter,"r")
+                    if self.table[boat[0]][boat[1]+counter] == "-":
+                        self.coltip[boat[1]+counter] -= 1
+                        self.rowtip[boat[0]] -= 1
                     self.table[boat[0]][boat[1]+counter] = "r"
-                    self.coltip[boat[1]+counter] -= 1
-                    self.rowtip[boat[0]] -= 1
                     
                 else:
                     self.fill_corners_and_adj(boat[0],boat[1]+counter,"m")
+                    if self.table[boat[0]][boat[1]+counter] == "-":
+                        self.coltip[boat[1]+counter] -= 1
+                        self.rowtip[boat[0]] -= 1
                     self.table[boat[0]][boat[1]+counter] = "m"
-                    self.coltip[boat[1]+counter] -= 1
-                    self.rowtip[boat[0]] -= 1
                 counter+=1
         elif boat [3] == "v":
             counter = 0
             while counter < boat[2]:
                 if counter == 0:
                     self.fill_corners_and_adj(boat[0]+counter,boat[1],"t")
+                    if self.table[boat[0]+counter][boat[1]] == "-":
+                        self.coltip[boat[1]] -= 1
+                        self.rowtip[boat[0]+counter] -= 1
                     self.table[boat[0]+counter][boat[1]] = "t"
-                    self.coltip[boat[1]] -= 1
-                    self.rowtip[boat[0]+counter] -= 1
                 elif counter == boat[2] - 1:
                     self.fill_corners_and_adj(boat[0]+counter,boat[1],"b")
+                    if self.table[boat[0]+counter][boat[1]] == "-":
+                        self.coltip[boat[1]] -= 1
+                        self.rowtip[boat[0]+counter] -= 1
                     self.table[boat[0]+counter][boat[1]] = "b"
-                    self.coltip[boat[1]] -= 1
-                    self.rowtip[boat[0]+counter] -= 1
                 else:
                     self.fill_corners_and_adj(boat[0]+counter,boat[1],"m")
+                    if self.table[boat[0]+counter][boat[1]] == "-":
+                        self.coltip[boat[1]] -= 1
+                        self.rowtip[boat[0]+counter] -= 1
                     self.table[boat[0]+counter][boat[1]] = "m"
-                    self.coltip[boat[1]] -= 1
-                    self.rowtip[boat[0]+counter] -= 1
+                    
                 counter+=1
 
     
@@ -593,9 +608,7 @@ class Board:
                 column += 1
             row += 1
 
-
-    
-    def check_tips(self):
+    def check_tipsss(self):
         row = 0
         column = 0
         while row < 10:
@@ -610,6 +623,30 @@ class Board:
                 return -1
             column += 1
         print()
+
+    def verify_tips(self):
+        row = 0
+        column = 0
+        while row < 10:
+            if self.rowtip[row] < 0:
+                return -1
+            row += 1
+        while column < 10:
+            if self.coltip[column] < 0:
+                return -1
+            column += 1
+    
+    def check_tips(self):
+        row = 0
+        column = 0
+        while row < 10:
+            if self.rowtip[row] != 0:
+                return -1
+            row += 1
+        while column < 10:
+            if self.coltip[column] != 0:
+                return -1
+            column += 1
 
     def check_ships(self):
         counter = 0
@@ -816,7 +853,6 @@ class Bimaru(Problem):
         new_state.board.rowtip = copy.deepcopy(state.board.rowtip)
         new_state.board.place_boat(action)
         new_state.board.fill_all()
-        new_state.board.output_board()
         new_state.board.count_ships()
         return new_state
 
