@@ -694,6 +694,7 @@ class Board:
                 shape4 = self.table[row][column+3]
                 if shape4 == '-': c += 1
                 if c > rowt : continue
+                if shape == 'l' and shape2 == 'm' and shape3 == 'm' and shape4 == 'r': continue
                 tip = self.coltip[column]
                 tip2 = self.coltip[column+1]
                 tip3 = self.coltip[column+2]
@@ -716,6 +717,7 @@ class Board:
                 shape4 = self.table[row+3][column]
                 if shape4 == '-': c += 1
                 if c > colt: continue
+                if shape == 't' and shape2 == 'm' and shape3 == 'm' and shape4 == 'b': continue
                 tip = self.rowtip[row]
                 tip2 = self.rowtip[row+1]
                 tip3 = self.rowtip[row+2]
@@ -742,6 +744,7 @@ class Board:
                 shape3 = self.table[row][column+2]
                 if shape3 == '-': c += 1
                 if c > rowt: continue
+                if shape == 'l' and shape2 == 'm' and shape3 == 'r': continue
                 tip = self.coltip[column]
                 tip2 = self.coltip[column+1]
                 tip3 = self.coltip[column+2]
@@ -761,6 +764,7 @@ class Board:
                 shape3 = self.table[row+2][column]
                 if shape3 == '-': c += 1
                 if c > colt: continue
+                if shape == 't' and shape2 == 'm' and shape3 == 'b': continue
                 tip = self.rowtip[row]
                 tip2 = self.rowtip[row+1]
                 tip3 = self.rowtip[row+2]
@@ -784,6 +788,7 @@ class Board:
                 shape2 = self.table[row][column+1]
                 if shape2 == '-': c += 1
                 if c > rowt: continue
+                if shape == 'l' and shape2 == 'r': continue
                 tip = self.coltip[column]
                 tip2 = self.coltip[column+1]
                 if (shape == '-' and tip >= 1) or shape == 'l' or shape == 'S':
@@ -800,6 +805,7 @@ class Board:
                 shape2 = self.table[row+1][column]
                 if shape2 == '-': c += 1
                 if c > colt: continue
+                if shape == 't' and shape2 == 'b': continue
                 tip = self.rowtip[row]
                 tip2 = self.rowtip[row+1]
                 if (shape == '-' and tip >= 1) or shape == 't' or shape == 'S':
