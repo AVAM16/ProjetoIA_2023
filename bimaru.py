@@ -729,6 +729,7 @@ class Board:
 
 
     def get_boats_three(self):
+        self.output_board()
         boats = []
         for row in range (10):
             rowt = self.rowtip[row]
@@ -768,6 +769,7 @@ class Board:
                         boats.append((row, column, 3, 'v'))
                 else:
                     continue
+        print(boats)
         return boats
 
 
@@ -824,6 +826,7 @@ class Board:
         if self.fleet[0] > 0:
             return self.get_boats_four()
         elif self.fleet[1] > 0:
+            print("nigga")
             return self.get_boats_three()
         elif self.fleet[2] > 0:
             return self.get_boats_two()
@@ -842,10 +845,12 @@ class Bimaru(Problem):
 
     def actions(self, state: BimaruState):
         b = state.board.get_boats()
-        state.board.check_tips()
+        print(b)
+        state.board.check_tipsss()
         return b
 
     def result(self, state: BimaruState, action):
+        state.board.output_board()
         new_state = copy.deepcopy(state)
         new_state.board.fleet = copy.deepcopy(state.board.fleet)
         new_state.board.coltip = copy.deepcopy(state.board.coltip)
@@ -854,6 +859,11 @@ class Bimaru(Problem):
         new_state.board.place_boat(action)
         new_state.board.fill_all()
         new_state.board.count_ships()
+        new_state.board.output_board()
+        print(new_state.board.fleet[0])
+        print(new_state.board.fleet[1])
+        print(new_state.board.fleet[2])
+        print(new_state.board.fleet[3])
         return new_state
 
     def goal_test(self, state: BimaruState):
