@@ -506,10 +506,20 @@ class Board:
                 repeat = 1
             self.check_pieces()
             self.fix_all_ships()
+        self.output_board()
+        row = 0
+        column = 0
+        while row < 10:
+            column = 0
+            while column < 10:
+                if self.table[row][column] != "." and self.table[row][column] != "c" and self.table[row][column] != "-":
+                    self.fill_corners_and_adj(row,column,self.table[row][column])
+                    self.complete(row,column,self.table[row][column])
+                column += 1
+            row += 1
         return 0
     
     def place_boat(self, boat):
-        print(boat)
         if boat[3] == "o":
             self.fill_corners_and_adj(boat[0],boat[1],"c")
             self.table[boat[0]][boat[1]] = "c"
@@ -528,6 +538,7 @@ class Board:
                     self.table[boat[0]][boat[1]+counter] = "r"
                     self.coltip[boat[1]+counter] -= 1
                     self.rowtip[boat[0]] -= 1
+                    
                 else:
                     self.fill_corners_and_adj(boat[0],boat[1]+counter,"m")
                     self.table[boat[0]][boat[1]+counter] = "m"
@@ -806,8 +817,9 @@ class Bimaru(Problem):
         pass
 
     def actions(self, state: BimaruState):
-        print(state.board.get_boats())
-        return state.board.get_boats()
+        b = state.board.get_boats()
+        state.board.check_tips()
+        return b
 
     def result(self, state: BimaruState, action):
         new_state = copy.deepcopy(state)
