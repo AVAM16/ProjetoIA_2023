@@ -501,11 +501,11 @@ class Board:
                         self.complete(row,column,self.table[row][column])
                     column += 1
                 row += 1
-            if self.verify_tips() == -1:
-                row = 0
-                while row < 10:
-                    self.rowtip[row] = -1
-                    row += 1
+            #if self.verify_tips() == -1:
+            #    row = 0
+             #   while row < 10:
+              #      self.rowtip[row] = -1
+               #     row += 1
 
         return 0
     
@@ -624,17 +624,17 @@ class Board:
             column += 1
         print()
 
-    def verify_tips(self):
-        row = 0
-        column = 0
-        while row < 10:
-            if self.rowtip[row] < 0:
-                return -1
-            row += 1
-        while column < 10:
-            if self.coltip[column] < 0:
-                return -1
-            column += 1
+#   def verify_tips(self):
+#        row = 0
+#        column = 0
+#        while row < 10:
+#            if self.rowtip[row] < 0:
+#                return -1
+#            row += 1
+#        while column < 10:
+#            if self.coltip[column] < 0:
+#                return -1
+#            column += 1
     
     def check_tips(self):
         row = 0
