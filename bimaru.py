@@ -131,14 +131,14 @@ class Board:
         if shape != "b" and shape != "m" and row != 0:
             self.table[row-1][column] = "."
         if shape == "m" and (row == 0 or self.table[row-1][column] == "." or row == 9 or self.table[row+1][column] == ".") and ((column != 0 and self.table[row][column-1] != ".") and  (column != 9 and self.table[row][column+1] != ".")):
-            if row != 1:
+            if row != 0:
                 self.table[row-1][column] = "."
-            if row != 8:
+            if row != 9:
                 self.table[row+1][column] = "."
         if shape == "m" and (column == 0 or self.table[row][column-1] == "." or  column == 9 or self.table[row][column+1] == ".") and ((row != 0 and self.table[row-1][column] != ".") and (row != 9 and self.table[row+1][column] != ".")):
-            if column != 1:
+            if column != 0:
                 self.table[row][column-1] = "."
-            if column != 8:
+            if column != 9:
                 self.table[row][column+1] = "."
 
 
@@ -217,7 +217,7 @@ class Board:
                     self.table[row][column] = "c"
                     self.fleet[3] -= 1
 
-                elif (column == 0 or self.table[row][column-1] == ".") and (column == 9 or self.table[row][column+1] == "."):
+                elif (column == 0 or self.table[row][column-1] == ".") and (column == 9 or self.table[row][column+1] == ".") and self.table[row][column] != "m":
                     self.fill_corners(row,column)
                     if self.table[row][column] != "S":
                         self.coltip[column] -= 1
@@ -264,7 +264,7 @@ class Board:
                     self.table[row][column] = "c"
                     self.fleet[3] -= 1
 
-                elif (row == 0 or self.table[row-1][column] == ".") and (row == 9 or self.table[row+1][column] == "."):
+                elif (row == 0 or self.table[row-1][column] == ".") and (row == 9 or self.table[row+1][column] == ".") and self.table[row][column] != "m":
                     self.fill_corners(row,column)
                     if self.table[row][column] != "S":
                         self.rowtip[row] -= 1
@@ -367,20 +367,6 @@ class Board:
             row+=1
         return changed
     
-
-    def check_finish(self):
-        column = 0
-        counter = 0
-        while column<10:
-            row = 0
-            while row<10:
-                if self.table[row][column] == "-":
-                    counter +=1
-                row+=1   
-            column+=1
-        if counter == 0:
-            return 1
-        return 0
     
     def fill_middle(self,row,column):
         if (row == 0 or self.table[row-1][column] == "." or row == 9 or self.table[row+1][column] == ".") and ((column != 0 and self.table[row][column-1] != ".") and  (column != 9 and self.table[row][column+1] != ".")):
@@ -498,25 +484,23 @@ class Board:
         return 0
     
     def fill_all(self):
-        repeat = 1
-        while repeat != 0:
-            repeat = 0
+        repeat = 0
+        while repeat < 1:
+            repeat += 1
             changed = self.fill_board()
             if changed == 1:
-                repeat = 1
+                repeat = 0
             self.check_pieces()
             self.fix_all_ships()
-        self.output_board()
-        row = 0
-        column = 0
-        while row < 10:
+            row = 0
             column = 0
-            while column < 10:
-                if self.table[row][column] != "." and self.table[row][column] != "c" and self.table[row][column] != "-":
-                    self.fill_corners_and_adj(row,column,self.table[row][column])
-                    self.complete(row,column,self.table[row][column])
-                column += 1
-            row += 1
+            while row < 10:
+                column = 0
+                while column < 10:
+                    if self.table[row][column] != "." and self.table[row][column] != "c" and self.table[row][column] != "-":
+                        self.complete(row,column,self.table[row][column])
+                    column += 1
+                row += 1
         return 0
     
     def place_boat(self, boat):
@@ -567,17 +551,17 @@ class Board:
 
     
     def count_ships(self):
-        self.fleet[0] = 4
-        self.fleet[1] = 3
-        self.fleet[2] = 2
-        self.fleet[3] = 1
+        self.fleet[0] = 1
+        self.fleet[1] = 2
+        self.fleet[2] = 3
+        self.fleet[3] = 4
         row = 0
         while row < 10:
             column = 0
             while column < 10:
                 counter = 0
                 if self.table[row][column] == "c":
-                    self.fleet[0] -= 1
+                    self.fleet[3] -= 1
                 elif self.table[row][column] == "l":
                     repeat = 0
                     while repeat == 0:
@@ -585,13 +569,13 @@ class Board:
                             return -1
                         elif self.table[row][column+counter] == "r":
                             repeat = 1
-                            self.fleet[counter] -= 1
+                            self.fleet[3-counter] -= 1
                         elif self.table[row][column+counter] == "m":
                             counter += 1
                         elif self.table[row][column+counter] == "l":
                             counter += 1
                         else:
-                            return -1
+                            repeat = 1
                 elif self.table[row][column] == "t":
                     repeat = 0
                     while repeat == 0:
@@ -599,13 +583,13 @@ class Board:
                             return -1
                         elif self.table[row+counter][column] == "b":
                             repeat = 1
-                            self.fleet[counter] -= 1
+                            self.fleet[3-counter] -= 1
                         elif self.table[row+counter][column] == "m":
                             counter += 1
                         elif self.table[row+counter][column] == "t":
                             counter += 1
                         else:
-                            return -1
+                            repeat = 1
                 column += 1
             row += 1
 
@@ -615,15 +599,17 @@ class Board:
         row = 0
         column = 0
         while row < 10:
-            #print(self.rowtip[row])
+            print(self.rowtip[row],",",end = '')
             if self.rowtip[row] == 10:
                 return -1
             row += 1
+        print()
         while column < 10:
-            #print(self.coltip[column])
+            print(self.coltip[column],",",end = '')
             if self.coltip[column] == 10:
                 return -1
             column += 1
+        print()
 
     def check_ships(self):
         counter = 0
@@ -814,6 +800,7 @@ class Bimaru(Problem):
         self.board.fill_all()
         self.board.output_board()
         self.board.count_ships()
+        self.board.check_tips()
         pass
 
     def actions(self, state: BimaruState):
@@ -855,5 +842,5 @@ if __name__ == "__main__":
     b.initial=initial_state
     solution = depth_first_tree_search(b)
     if solution != None:
-        solution.state.board.output_board()
+        solution.state.board.check_tips()
     exit(0)
