@@ -603,21 +603,6 @@ class Board:
                 column += 1
             row += 1
 
-    def check_tipsss(self):
-        row = 0
-        column = 0
-        while row < 10:
-            print(self.rowtip[row],",",end = '')
-            if self.rowtip[row] == 10:
-                return -1
-            row += 1
-        print()
-        while column < 10:
-            print(self.coltip[column],",",end = '')
-            if self.coltip[column] == 10:
-                return -1
-            column += 1
-        print()
     
     def check_tips(self):
         row = 0
