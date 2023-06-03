@@ -178,7 +178,7 @@ class Board:
                 self.table[row+1][column] = "S"
                 self.rowtip[row+1] -= 1
                 self.coltip[column] -= 1
-                self.fill_corners(row+2,column)
+                self.fill_corners(row+1,column)
         elif shape == "b":
             if (row == 1 or self.table[row-2][column] == ".") and self.table[row-1][column] == "-":
                 self.table[row-1][column] = "t"
@@ -502,12 +502,6 @@ class Board:
                         self.complete(row,column,self.table[row][column])
                     column += 1
                 row += 1
-            #if self.verify_tips() == -1:
-            #    row = 0
-             #   while row < 10:
-              #      self.rowtip[row] = -1
-               #     row += 1
-
         return 0
     
     def place_boat(self, boat):
@@ -624,18 +618,6 @@ class Board:
                 return -1
             column += 1
         print()
-
-#   def verify_tips(self):
-#        row = 0
-#        column = 0
-#        while row < 10:
-#            if self.rowtip[row] < 0:
-#                return -1
-#            row += 1
-#        while column < 10:
-#            if self.coltip[column] < 0:
-#                return -1
-#            column += 1
     
     def check_tips(self):
         row = 0
@@ -652,7 +634,8 @@ class Board:
     def check_ships(self):
         counter = 0
         while counter < 4:
-            if board.fleet[counter] != 0:
+            if self.fleet[counter] != 0:
+                print(self.fleet[counter])
                 return -1
             counter += 1
         return 0
@@ -732,7 +715,6 @@ class Board:
 
 
     def get_boats_three(self):
-        self.output_board()
         boats = []
         for row in range (10):
             rowt = self.rowtip[row]
@@ -774,7 +756,6 @@ class Board:
                         boats.append((row, column, 3, 'v'))
                 else:
                     continue
-        print(boats)
         return boats
 
 
@@ -833,7 +814,6 @@ class Board:
         if self.fleet[0] > 0:
             return self.get_boats_four()
         elif self.fleet[1] > 0:
-            print("nigga")
             return self.get_boats_three()
         elif self.fleet[2] > 0:
             return self.get_boats_two()
@@ -845,19 +825,14 @@ class Bimaru(Problem):
     def __init__(self, board: Board):
         self.board = board
         self.board.fill_all()
-        self.board.output_board()
         self.board.count_ships()
-        self.board.check_tips()
         pass
 
     def actions(self, state: BimaruState):
         b = state.board.get_boats()
-        print(b)
-        state.board.check_tipsss()
         return b
 
     def result(self, state: BimaruState, action):
-        state.board.output_board()
         new_state = copy.deepcopy(state)
         new_state.board.fleet = copy.deepcopy(state.board.fleet)
         new_state.board.coltip = copy.deepcopy(state.board.coltip)
@@ -866,11 +841,6 @@ class Bimaru(Problem):
         new_state.board.place_boat(action)
         new_state.board.fill_all()
         new_state.board.count_ships()
-        new_state.board.output_board()
-        print(new_state.board.fleet[0])
-        print(new_state.board.fleet[1])
-        print(new_state.board.fleet[2])
-        print(new_state.board.fleet[3])
         return new_state
 
     def goal_test(self, state: BimaruState):
@@ -898,4 +868,5 @@ if __name__ == "__main__":
         solution.state.board.check_tips()
     for x in range(len(hints)):
         solution.state.board.table[hints[x][0]][hints[x][1]] = hints[x][2]
+    solution.state.board.output_board()
     exit(0)
