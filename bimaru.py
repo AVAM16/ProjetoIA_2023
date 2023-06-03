@@ -20,6 +20,8 @@ from search import (
 )
 import numpy as np
 
+hints = []
+
 class BimaruState:
     state_id = 0
 
@@ -90,14 +92,13 @@ class Board:
             if b.coltip[i] == 0:
                 b.table[:, i] = np.full((1,10), ".") 
         n = int(stdin.readline())
-        x = 0
-        while x < n:
+        for _ in range(n):
             hint = stdin.readline().split()
             hint.pop(0)
             shape = hint.pop(2)
             hint = [int(x) for x in hint]
             b.get_hint((hint[0],hint[1],shape))
-            x += 1
+            hints.append((hint[0],hint[1],shape))
         row = 0
         column = 0
         while row < 10:
@@ -895,4 +896,6 @@ if __name__ == "__main__":
     solution = depth_first_tree_search(b)
     if solution != None:
         solution.state.board.check_tips()
+    for x in range(len(hints)):
+        solution.state.board.table[hints[x][0]][hints[x][1]] = hints[x][2]
     exit(0)
