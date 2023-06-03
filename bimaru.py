@@ -836,8 +836,12 @@ class Bimaru(Problem):
         
     def h(self, node: Node):
         """Função heuristica utilizada para a procura A*."""
-        # TODO
-        pass
+        count = 0
+        for x in range(10):
+            count += node.state.board.rowtip[x]
+        for x in range(10):
+            count += node.state.board.coltip[x]
+        return count
 
     # TODO: outros metodos da classe
 
@@ -847,7 +851,7 @@ if __name__ == "__main__":
     b = Bimaru(board)
     initial_state=BimaruState(copy.copy(b.board))
     b.initial=initial_state
-    solution = depth_first_tree_search(b)
+    solution = astar_search(b)
     if solution != None:
         solution.state.board.check_tips()
     for x in range(len(hints)):
