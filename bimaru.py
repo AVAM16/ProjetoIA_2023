@@ -635,7 +635,6 @@ class Board:
         counter = 0
         while counter < 4:
             if self.fleet[counter] != 0:
-                print(self.fleet[counter])
                 return -1
             counter += 1
         return 0
